@@ -1,39 +1,67 @@
-import { servicesData } from "../data/servicesData";
 import { useParams } from "react-router-dom";
-
+import { servicesData } from "../data/servicesData";
 
 export default function ServiceCategory() {
   const { serviceType } = useParams();
   const service = servicesData[serviceType];
 
   if (!service) {
-    return <div className="text-white p-20">Service Not Found</div>;
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <h1 className="text-3xl text-red-500">Service Not Found</h1>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white px-10 py-20">
+    <div className="min-h-screen bg-black text-white px-8 md:px-16 py-24">
       
-      <h1 className="text-4xl font-bold text-red-600 mb-12">
+      {/* Service Title */}
+      <h1 className="text-4xl md:text-5xl font-bold text-red-600 mb-16 text-center">
         {service.title}
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      {/* Products Grid */}
+      <div className="grid md:grid-cols-3 gap-10">
         {service.products.map((product) => (
           <div
             key={product.id}
-            className="bg-zinc-900 p-6 rounded-xl hover:scale-105 transition"
+            className="bg-zinc-900 rounded-xl overflow-hidden shadow-lg 
+                       hover:scale-105 hover:shadow-red-900/40 
+                       transition duration-300"
           >
-            <h2 className="text-xl font-semibold mb-4">
-              {product.name}
-            </h2>
+            {/* Product Image */}
+            <img
+              src={`${product.image}?auto=format&fit=crop&w=600&q=80`}
+              alt={product.name}
+              className="h-52 w-full object-cover"
+            />
 
-            <p className="text-red-500 text-lg font-bold mb-6">
-              ₹{product.price}
-            </p>
+            <div className="p-6">
+              
+              {/* Product Name */}
+              <h2 className="text-xl font-semibold mb-3">
+                {product.name}
+              </h2>
 
-            <button className="bg-red-600 px-4 py-2 rounded hover:bg-red-700">
-              View Details
-            </button>
+              {/* Description */}
+              <p className="text-gray-400 text-sm mb-5">
+                {product.description}
+              </p>
+
+              {/* Price + Button */}
+              <div className="flex justify-between items-center">
+                <span className="text-red-500 text-lg font-bold">
+                  ₹{product.price}
+                </span>
+
+                <button className="bg-red-600 px-4 py-2 rounded-md 
+                                   hover:bg-red-700 transition">
+                  View Details
+                </button>
+              </div>
+
+            </div>
           </div>
         ))}
       </div>

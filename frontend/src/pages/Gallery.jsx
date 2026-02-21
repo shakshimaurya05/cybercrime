@@ -1,62 +1,75 @@
+import React, { useState } from "react";
+import bgImage from "../assets/hero.png";
+import Navbar from "../components/Navbar";
+
 export default function Gallery() {
+
   const images = [
-    {
-      src: "https://static.pib.gov.in/WriteReadData/userfiles/image/L1P26UYR.jpeg",
-      title: "National Cyber Security Conference",
-      desc: "Providing VAPT & SOC consultation to leading authorities."
-    },
-    {
-      src: "https://static.pib.gov.in/WriteReadData/userfiles/image/L1P1ODLY.JPG",
-      title: "VAPT Deployment",
-      desc: "On-site vulnerability assessment & penetration testing."
-    },
-    {
-      src: "https://www.frankleisureandevents.com/images/service/corporate-conference.jpg",
-      title: "SOC Monitoring Center",
-      desc: "24/7 Security Operations Center monitoring."
-    },
-    {
-      src: "https://www.frankleisureandevents.com/images/service/facility-and-activity.jpg",
-      title: "Cyber Investigation",
-      desc: "Digital forensics & intelligence operations."
-    }
+    "https://static.pib.gov.in/WriteReadData/userfiles/image/L1P26UYR.jpeg",
+    "https://static.pib.gov.in/WriteReadData/userfiles/image/L1P1ODLY.JPG",
+    "https://www.frankleisureandevents.com/images/service/corporate-conference.jpg",
+    "https://www.frankleisureandevents.com/images/service/facility-and-activity.jpg"
   ];
 
+  const [selectedImage, setSelectedImage] = useState(images[0]);
+
   return (
-    <div className="w-full h-screen overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth bg-black">
-      
-      <div className="flex h-full">
-        {images.map((img, index) => (
-          <div
-            key={index}
-            className="relative w-full h-screen flex-shrink-0 snap-start"
-          >
-            {/* Image */}
+    <>
+      <Navbar />
+
+      <div className="relative min-h-screen w-full overflow-hidden pt-10">
+
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center scale-105 animate-slowZoom"
+          style={{ backgroundImage: `url(${bgImage})` }}
+        ></div>
+
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/90"></div>
+
+        {/* Red Light Overlay */}
+        <div className="absolute inset-0 bg-red-600/10 mix-blend-overlay"></div>
+
+        {/* Scan Line */}
+        <div className="absolute w-full h-1 bg-red-500/40 animate-scanLine"></div>
+
+        {/* Content */}
+        <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-6">
+
+          {/* Main Image */}
+          <div className="w-[460px] h-[340px] md:w-[520px] md:h-[380px]
+                          border-4 border-red-600
+                          shadow-2xl shadow-red-900/50
+                          overflow-hidden rounded-xl
+                          mb-6 transition duration-500">
             <img
-              src={`${img.src}?auto=format&fit=crop&w=1600&q=80`}
-              alt={img.title}
-              className="w-full h-full object-cover brightness-50"
+              src={selectedImage}
+              alt="Selected"
+              className="w-full h-full object-cover hover:scale-105 transition duration-500"
             />
-
-            {index === 0 && (
-              <div className="absolute top-1/2 left-12 -translate-y-1/2 
-                              bg-black/40 backdrop-blur-md p-12 
-                              border-l-4 border-red-600 
-                              max-w-xl text-white">
-                
-                <h1 className="text-4xl font-bold text-red-500 mb-4">
-                  {img.title}
-                </h1>
-
-                <p className="text-lg text-gray-300">
-                  {img.desc}
-                </p>
-              </div>
-            )}
           </div>
-        ))}
-      </div>
 
-    </div>
+          <div className="flex gap-3 flex-wrap justify-center">
+            {images.map((img, index) => (
+              <div
+                key={index}
+                onClick={() => setSelectedImage(img)}
+                className={`w-16 h-16 md:w-20 md:h-20 cursor-pointer border-2
+                ${selectedImage === img ? "border-red-600" : "border-gray-600"}
+                rounded-md overflow-hidden hover:scale-105 transition duration-300`}
+              >
+                <img
+                  src={img}
+                  alt="Thumbnail"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </>
   );
 }
