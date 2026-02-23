@@ -69,7 +69,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm"
+                             focus:outline-none focus:border-red-600 text-sm text-white"
                 />
               </div>
 
@@ -85,7 +85,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm"
+                             focus:outline-none focus:border-red-600 text-sm text-white"
                 />
               </div>
 
@@ -102,7 +102,7 @@ export default function Contact() {
                   value={formData.phone}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm"
+                             focus:outline-none focus:border-red-600 text-sm text-white"
                 />
               </div>
 
@@ -119,7 +119,7 @@ export default function Contact() {
                   value={formData.requirements}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm"
+                             focus:outline-none focus:border-red-600 text-sm text-white"
                 />
               </div>
 
@@ -127,7 +127,7 @@ export default function Contact() {
               <button
                 type="submit"
                 className="w-full bg-red-600 py-2 rounded font-semibold 
-                           hover:bg-red-700 transition text-sm mt-2"
+                           hover:bg-red-700 transition text-sm mt-2 "
               >
                 Submit Inquiry
               </button>

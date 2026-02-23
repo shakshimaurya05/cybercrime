@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-
+import { Link } from "react-router-dom";
 export default function CTA() {
   return (
     <section className="relative py-32 bg-black text-center overflow-hidden">
@@ -22,11 +22,11 @@ export default function CTA() {
           Engage with our initiative to strengthen digital resilience through
           structured cybersecurity architecture.
         </p>
-
+ <Link to="/contact">
         <button className="px-10 py-4 border border-red-600 text-white hover:bg-red-600 transition duration-300 shadow-lg shadow-red-600/30">
           Connect With Us
         </button>
-
+</Link>
       </motion.div>
     </section>
   );
