@@ -33,7 +33,7 @@ export default function About() {
         ></div>
 
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/80 to-black/95"></div>
-        <div className="absolute inset-0 bg-red-600/10 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-green-600/10 mix-blend-overlay"></div>
 
         <div className="relative z-20 px-6 md:px-16 pt-32 pb-20 space-y-32">
 
@@ -46,7 +46,7 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-red-600 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-green-600 mb-6">
               Who We Are
             </h1>
             <p className="text-gray-300 leading-relaxed">
@@ -56,7 +56,6 @@ export default function About() {
               before they can be exploited.
             </p>
           </motion.section>
-
 
           {/* SECTION 2 */}
           <div className="grid md:grid-cols-3 gap-8">
@@ -81,11 +80,11 @@ export default function About() {
                 whileInView="visible"
                 transition={{ duration: 0.6, delay: i * 0.2 }}
                 viewport={{ once: true }}
-                className="bg-black/60 backdrop-blur-md border border-red-900
+                className="bg-black/60 backdrop-blur-md border border-green-900
                            rounded-xl p-8 text-center
-                           hover:shadow-red-900/40 transition"
+                           hover:shadow-green-900/40 transition"
               >
-                <h3 className="text-xl font-semibold mb-4 text-red-500">
+                <h3 className="text-xl font-semibold mb-4 text-green-500">
                   {item.title}
                 </h3>
                 <p className="text-gray-400 text-sm">
@@ -94,7 +93,6 @@ export default function About() {
               </motion.div>
             ))}
           </div>
-
 
           {/* SECTION 3 */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -105,7 +103,7 @@ export default function About() {
               whileInView="visible"
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="rounded-xl overflow-hidden shadow-2xl shadow-red-900/40"
+              className="rounded-xl overflow-hidden shadow-2xl shadow-green-900/40"
             >
               <img
                 src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=900&q=80"
@@ -122,8 +120,8 @@ export default function About() {
               viewport={{ once: true }}
               className="space-y-6"
             >
-              <div className="bg-black/60 border border-red-900 rounded-lg p-6">
-                <h4 className="text-lg font-semibold text-red-500 mb-2">
+              <div className="bg-black/60 border border-green-900 rounded-lg p-6">
+                <h4 className="text-lg font-semibold text-green-500 mb-2">
                   Trusted Security Frameworks
                 </h4>
                 <p className="text-gray-400 text-sm">
@@ -131,8 +129,8 @@ export default function About() {
                 </p>
               </div>
 
-              <div className="bg-black/60 border border-red-900 rounded-lg p-6">
-                <h4 className="text-lg font-semibold text-red-500 mb-2">
+              <div className="bg-black/60 border border-green-900 rounded-lg p-6">
+                <h4 className="text-lg font-semibold text-green-500 mb-2">
                   Advanced Threat Detection
                 </h4>
                 <p className="text-gray-400 text-sm">
@@ -141,7 +139,6 @@ export default function About() {
               </div>
             </motion.div>
           </div>
-
 
           {/* SECTION 4 */}
           <motion.section
@@ -152,7 +149,7 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-3xl font-bold text-red-600 mb-12">
+            <h2 className="text-3xl font-bold text-green-600 mb-12">
               Our Impact
             </h2>
 
@@ -165,9 +162,9 @@ export default function About() {
               ].map((stat, i) => (
                 <div
                   key={i}
-                  className="bg-black/60 border border-red-900 rounded-xl p-6"
+                  className="bg-black/60 border border-green-900 rounded-xl p-6"
                 >
-                  <h3 className="text-3xl font-bold text-red-500 mb-2">
+                  <h3 className="text-3xl font-bold text-green-500 mb-2">
                     {stat.number}
                   </h3>
                   <p className="text-gray-400 text-sm">
