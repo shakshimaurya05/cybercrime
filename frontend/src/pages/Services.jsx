@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import bgImage from "../assets/hero.png";
@@ -218,7 +217,7 @@ export default function Services() {
 
                 <div className="mt-2">
                   <Link
-                    to={`/services/${activeService.id}`}
+                    to={`/services/${activeService.category}`}
                     className="inline-block bg-green-600 px-10 py-4 rounded-lg hover:bg-green-700 transition font-semibold shadow-lg"
                   >
                     Explore Service
@@ -251,7 +250,7 @@ export default function Services() {
                   </p>
 
                   <Link
-                    to={`/services/${service.id}`}
+                    to={`/services/${service.category}`}
                     className="inline-block border border-green-600 px-8 py-3 rounded-md hover:bg-green-700 transition"
                   >
                     Learn More

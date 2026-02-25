@@ -33,6 +33,17 @@ const galleryImages = [
     imageUrl: "https://images.unsplash.com/photo-1526378722484-bd91ca387e72",
     filename: "data-protection.jpg",
     title: "Data Protection & Privacy"
+  },
+  // NEW IMAGES
+  {
+    imageUrl: "https://images.unsplash.com/photo-1563206767-5b1d972e813e",
+    filename: "network-security.jpg",
+    title: "Network Security Monitoring"
+  },
+  {
+    imageUrl: "https://images.unsplash.com/photo-1558494949-ef2bb21568c0",
+    filename: "cloud-security.jpg",
+    title: "Cloud Infrastructure Security"
   }
 ];
 
