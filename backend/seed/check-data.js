@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const Service = require('../models/Service');
+const Service = require('../models/ServiceCard');
 const Gallery = require('../models/Gallery');
 
 const checkData = async () => {

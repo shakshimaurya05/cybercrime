@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
 
-const serviceSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
-  },
+const serviceCategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+    unique: true
+  },
+  title: {
+    type: String,
+    required: true,
+    trim: true
   },
   shortDescription: {
     type: String,
@@ -26,20 +27,9 @@ const serviceSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
-  category: {
-    type: String,
-    required: true,
-    trim: true,
-    lowercase: true
-  },
   image: {
     type: String,
     required: true
-  },
-  price: {
-    type: Number,
-    min: 0,
-    default: 0
   },
   isActive: {
     type: Boolean,
@@ -47,6 +37,6 @@ const serviceSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-const Service = mongoose.model('Service', serviceSchema);
+const ServiceCategory = mongoose.model('ServiceCategory', serviceCategorySchema);
 
-module.exports = Service;
+module.exports = ServiceCategory;
