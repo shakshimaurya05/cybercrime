@@ -16,12 +16,12 @@ const serviceSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  category: {
-    type: String,
-    required: true,
-    enum: ['vapt', 'soc', 'find-info'],
-    default: 'vapt'
-  },
+ category: {
+  type: String,
+  required: true,
+  trim: true,
+  lowercase: true
+},
   image: {
     type: String,
     required: true
