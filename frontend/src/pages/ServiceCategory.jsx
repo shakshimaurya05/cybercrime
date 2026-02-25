@@ -3,15 +3,40 @@ import { useParams, Link } from "react-router-dom";
 import bgImage from "../assets/hero.png";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import api from "../api/axios";
 
 export default function ServiceCategory() {
   const { id } = useParams();
   const cardsRef = useRef([]);
   const [pageLoaded, setPageLoaded] = useState(false);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setTimeout(() => setPageLoaded(true), 200);
   }, []);
+
+  // Fetch services by category from backend
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/api/services/category/${id}`);
+        setServices(response.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching services:', err);
+        setError('Failed to load services. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchServices();
+    }
+  }, [id]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,89 +55,46 @@ export default function ServiceCategory() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [services]);
 
-  const serviceData = {
-    soc: {
-      name: "Security Operations Center",
-      description:
-        "Enterprise-grade 24/7 cyber monitoring, threat intelligence, advanced SIEM integration, anomaly detection and rapid incident response capabilities tailored for mission-critical environments.",
-      products: [
-        {
-          title: "SOC Lite Monitoring",
-          description:
-            "Real-time log monitoring with AI-powered alerting and compliance-ready reporting dashboards.",
-          price: "$999 / month",
-          image:
-            "https://images.unsplash.com/photo-1550751827-4bd374c3f58b",
-        },
-        {
-          title: "SOC Enterprise Suite",
-          description:
-            "Full security operations automation with advanced threat intelligence integration and active response orchestration.",
-          price: "$2499 / month",
-          image:
-            "https://images.unsplash.com/photo-1518770660439-4636190af475",
-        },
-      ],
-    },
-    vapt: {
-      name: "Vulnerability Assessment & Penetration Testing",
-      description:
-        "Comprehensive vulnerability scanning and penetration testing services across applications, networks and cloud infrastructures.",
-      products: [
-        {
-          title: "Web Application VAPT",
-          description:
-            "In-depth web app penetration testing covering OWASP Top 10 and business logic vulnerabilities.",
-          price: "$1499 / project",
-          image:
-            "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
-        },
-        {
-          title: "Cloud Security Audit",
-          description:
-            "Advanced AWS/Azure cloud misconfiguration assessment with risk prioritization and remediation roadmap.",
-          price: "$1999 / project",
-          image:
-            "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-        },
-      ],
-    },
-    "find-info": {
-      name: "Digital Exposure Monitoring",
-      description:
-        "Proactive monitoring of leaked credentials, dark web mentions, executive exposure risks and brand impersonation threats.",
-      products: [
-        {
-          title: "Dark Web Exposure Scan",
-          description:
-            "Automated scanning of breach databases and dark web marketplaces for exposed credentials.",
-          price: "$799 / scan",
-          image:
-            "https://images.unsplash.com/photo-1526378722484-bd91ca387e72",
-        },
-        {
-          title: "Executive Risk Shield",
-          description:
-            "Continuous monitoring of executive digital exposure with personalized threat alerts.",
-          price: "$1299 / month",
-          image:
-            "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4",
-        },
-      ],
-    },
-  };
-
-  const activeService = serviceData[id?.toLowerCase()];
-
-  if (!activeService) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white text-2xl">
-        Service Not Found
-      </div>
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center bg-black text-white">
+          <div className="text-center">
+            <div className="text-green-400 text-xl mb-4">Loading services...</div>
+            <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          </div>
+        </div>
+      </>
     );
   }
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center bg-black text-white">
+          <div className="text-center text-red-400 text-xl">✕ {error}</div>
+        </div>
+      </>
+    );
+  }
+
+  if (services.length === 0) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center bg-black text-white text-2xl">
+          No services found for this category
+        </div>
+      </>
+    );
+  }
+
+  const categoryTitle = services[0]?.title || id?.toUpperCase();
+  const categoryDescription = services[0]?.detailedDescription || '';
 
   return (
     <div
@@ -138,7 +120,7 @@ export default function ServiceCategory() {
                   : "opacity-0 -translate-y-10"
               }`}
             >
-              {activeService.name}
+              {categoryTitle}
             </h1>
 
             <p
@@ -148,15 +130,15 @@ export default function ServiceCategory() {
                   : "opacity-0 translate-y-10"
               }`}
             >
-              {activeService.description}
+              {categoryDescription}
             </p>
           </div>
 
           {/* Cards */}
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
-            {activeService.products.map((product, index) => (
+            {services.map((service, index) => (
               <div
-                key={index}
+                key={service._id || index}
                 ref={(el) => (cardsRef.current[index] = el)}
                 className={`glass-card scroll-card ${
                   index % 2 === 0 ? "from-left" : "from-right"
@@ -165,8 +147,8 @@ export default function ServiceCategory() {
                 {/* Image */}
                 <div className="md:w-40 w-full flex-shrink-0">
                   <img
-                    src={product.image}
-                    alt={product.title}
+                    src={service.image}
+                    alt={service.title}
                     className="rounded-lg w-full h-40 object-cover"
                   />
                 </div>
@@ -175,21 +157,35 @@ export default function ServiceCategory() {
                 <div className="flex flex-col justify-between flex-1">
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-green-400 mb-2">
-                      {product.title}
+                      {service.title}
                     </h3>
 
                     <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                      {product.description}
+                      {service.shortDescription || service.description}
                     </p>
+
+                    {/* Features */}
+                    {service.features && service.features.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {service.features.slice(0, 3).map((feature, i) => (
+                          <span
+                            key={i}
+                            className="text-xs bg-green-500/10 text-green-400 px-3 py-1 rounded border border-green-500/30"
+                          >
+                            {feature}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-white">
-                      {product.price}
+                      {service.price > 0 ? `₹${service.price}` : 'Contact Us'}
                     </span>
 
                     <Link
-                      to="#"
+                      to={`/services/${service._id}`}
                       className="bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition text-sm font-semibold"
                     >
                       View Details

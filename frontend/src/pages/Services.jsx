@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import bgImage from "../assets/hero.png";
@@ -30,16 +31,12 @@ export default function Services() {
           name: service.name,
           // Full title for detail panel (use title if exists, otherwise use name)
           title: service.title || service.name,
-          // Short description (use short if exists, otherwise truncate description)
-          short: service.short || service.description.substring(0, 100) + '...',
-          // Full details
-          details: service.description,
-          // Features (split comma-separated string or use category)
-          features: service.features 
-            ? (typeof service.features === 'string' 
-                ? service.features.split(',').map(f => f.trim()).filter(f => f)
-                : service.features)
-            : [service.category.toUpperCase()],
+          // Short description (use shortDescription from backend)
+          short: service.shortDescription || service.short || (service.detailedDescription ? service.detailedDescription.substring(0, 100) + '...' : ''),
+          // Full details (use detailedDescription from backend)
+          details: service.detailedDescription || service.details || service.description || '',
+          // Features array from backend
+          features: service.features || [],
           // Image
           image: service.image,
           // Price
@@ -116,7 +113,7 @@ export default function Services() {
 
       <div className="fixed inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black/90"></div>
       <div className="fixed inset-0 bg-green-600/10 mix-blend-overlay"></div>
- {/* Animated scan line */}
+      {/* Animated scan line */}
       <div className="absolute w-full h-1 bg-green-500/40 animate-scanLine"></div>
 
       {/* Floating particles */}
