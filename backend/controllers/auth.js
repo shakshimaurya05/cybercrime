@@ -60,7 +60,7 @@ exports.loginAdmin = async (req, res) => {
     const token = jwt.sign(
       { id: admin._id, username: admin.username },
       process.env.JWT_SECRET,
-      { expiresIn: '30' }
+      { expiresIn: '30d' }  // 30 days
     );
 
     // Send success response with token

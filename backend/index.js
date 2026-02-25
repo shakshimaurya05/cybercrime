@@ -15,12 +15,12 @@ app.use(express.json());
 const authRoutes = require('./routes/auth');
 const serviceRoutes = require('./routes/services');
 const uploadRoutes = require('./routes/upload');
-const galleryRoutes = require('./routes/Gallery');  
+const galleryRoutes = require('./routes/Gallery');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use('/api/gallery', galleryRoutes);  
+app.use('/api/gallery', galleryRoutes);
 
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => console.log('MONGODB Connected'))

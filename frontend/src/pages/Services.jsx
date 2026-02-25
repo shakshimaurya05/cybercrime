@@ -3,65 +3,73 @@ import { Link } from "react-router-dom";
 import bgImage from "../assets/hero.png";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import api from "../api/axios";
 
 export default function Services() {
-  const services = [
-    {
-      id: "soc",
-      name: "SOC",
-      title: "Security Operations Center",
-      short:
-        "Continuous 24/7 monitoring, detection and incident response.",
-      details:
-        "Our SOC functions as a centralized cyber command infrastructure delivering real-time monitoring, SIEM log correlation, anomaly detection and rapid containment strategies for enterprise environments.",
-      features: [
-        "24/7 Threat Monitoring",
-        "Real-Time Log Analysis",
-        "Incident Response Execution",
-      ],
-    },
-    {
-      id: "vapt",
-      name: "VAPT",
-      title: "Vulnerability Assessment & Penetration Testing",
-      short:
-        "Simulated attack testing to identify security weaknesses.",
-      details:
-        "We conduct structured vulnerability scanning and controlled penetration testing to uncover exploitable flaws across applications, networks and cloud infrastructure.",
-      features: [
-        "Web & API Testing",
-        "Cloud Infrastructure Review",
-        "Risk Prioritization",
-        "Remediation Guidance",
-      ],
-    },
-    {
-      id: "find-info",
-      name: "Find Info",
-      title: "Find Your Information",
-      short:
-        "Digital exposure monitoring and breach intelligence.",
-      details:
-        "We proactively monitor exposed credentials, leaked data and executive risk signals across surface, deep and dark web environments.",
-      features: [
-        "Dark Web Monitoring",
-        "Credential Leak Detection",
-        "Executive Risk Alerts",
-        "Exposure Mitigation",
-      ],
-    },
-  ];
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [pageLoaded, setPageLoaded] = useState(false);
   const cardsRef = useRef([]);
 
+  // Fetch services from backend on component mount
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/api/services');
+        console.log('Services fetched:', response.data);
+
+        // Map backend services to match the UI structure
+        const mappedServices = response.data.map(service => ({
+          id: service._id,
+          // Short name for selector (use name field)
+          name: service.name,
+          // Full title for detail panel (use title if exists, otherwise use name)
+          title: service.title || service.name,
+          // Short description (use short if exists, otherwise truncate description)
+          short: service.short || service.description.substring(0, 100) + '...',
+          // Full details
+          details: service.description,
+          // Features (split comma-separated string or use category)
+          features: service.features 
+            ? (typeof service.features === 'string' 
+                ? service.features.split(',').map(f => f.trim()).filter(f => f)
+                : service.features)
+            : [service.category.toUpperCase()],
+          // Image
+          image: service.image,
+          // Price
+          price: service.price,
+          // Category
+          category: service.category
+        }));
+
+        console.log('Mapped services:', mappedServices);
+        setServices(mappedServices);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching services:', err);
+        setError('Failed to load services. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
   useEffect(() => {
     setTimeout(() => setPageLoaded(true), 200);
   }, []);
 
   useEffect(() => {
+    // Only start rotation if we have services
+    if (services.length === 0) return;
+
     const interval = setInterval(() => {
       setFade(false);
       setTimeout(() => {
@@ -73,7 +81,7 @@ export default function Services() {
     }, 2500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [services.length]); // Re-create interval when services change
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -92,7 +100,7 @@ export default function Services() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [services]); // Re-run when services change
 
   const activeService = services[activeIndex];
 
@@ -118,116 +126,145 @@ export default function Services() {
         {/* HERO SECTION */}
         <section className="h-[95vh] flex flex-col justify-center items-center px-6 text-center pt-20 overflow-hidden">
 
-          {/* Heading */}
-          <h1
-            className={`text-5xl font-bold  mb-12 mt-12 tracking-wide transition-all duration-1000 ${
-              pageLoaded
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-10"
-            }`}
-          >
-            Our Security Services
-          </h1>
+          {/* Loading State */}
+          {loading && (
+            <div className="text-center">
+              <div className="text-green-400 text-xl mb-4">Loading services...</div>
+              <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            </div>
+          )}
 
-          {/* Selector */}
-          <div className="flex gap-8 flex-wrap justify-center mb-10">
-            {services.map((service, index) => (
-              <div
-                key={service.id}
-                onMouseEnter={() => {
-                  setFade(false);
-                  setTimeout(() => {
-                    setActiveIndex(index);
-                    setFade(true);
-                  }, 200);
-                }}
-                className={`tilt-card cursor-pointer px-10 py-3 text-lg font-semibold rounded-xl border tracking-wide transition-all duration-700 ${
+          {/* Error State */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-600/20 border border-red-500 rounded-lg text-red-400">
+              ✕ {error}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && services.length === 0 && (
+            <div className="text-center text-gray-400">
+              <p className="text-xl">No services available yet.</p>
+            </div>
+          )}
+
+          {/* Content - Only render when services exist */}
+          {!loading && !error && services.length > 0 && (
+            <>
+              {/* Heading */}
+              <h1
+                className={`text-5xl font-bold  mb-12 mt-12 tracking-wide transition-all duration-1000 ${
                   pageLoaded
                     ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                } ${
-                  activeIndex === index
-                    ? "border-green-400 bg-green-900/40 scale-105 glow-border"
-                    : "border-green-900 hover:border-green-500"
+                    : "opacity-0 -translate-y-10"
                 }`}
-                style={{
-                  transitionDelay: `${index * 150}ms`,
-                }}
               >
-                {service.name}
+                Our Security Services
+              </h1>
+
+              {/* Selector */}
+              <div className="flex gap-8 flex-wrap justify-center mb-10">
+                {services.map((service, index) => (
+                  <div
+                    key={service.id}
+                    onMouseEnter={() => {
+                      setFade(false);
+                      setTimeout(() => {
+                        setActiveIndex(index);
+                        setFade(true);
+                      }, 200);
+                    }}
+                    className={`tilt-card cursor-pointer px-10 py-3 text-lg font-semibold rounded-xl border tracking-wide transition-all duration-700 ${
+                      pageLoaded
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-10"
+                    } ${
+                      activeIndex === index
+                        ? "border-green-400 bg-green-900/40 scale-105 glow-border"
+                        : "border-green-900 hover:border-green-500"
+                    }`}
+                    style={{
+                      transitionDelay: `${index * 150}ms`,
+                    }}
+                  >
+                    {service.name}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Detail Panel */}
-          <div
-            className={`backdrop-blur-xl bg-black/25 rounded-xl border border-white/20 shadow-2xl shadow-black/40 w-full max-w-4xl px-10 pt-6 py-8 pb-8 transition-all duration-700 ease-in-out float-soft ${
-              pageLoaded && fade
-                ? "opacity-100 scale-100"
-                : "opacity-0 scale-95"
-            }`}
-          >
-            <h2 className="text-3xl text-green-400 mb-4">
-              {activeService.title}
-            </h2>
-
-            <p className="text-gray-300 mb-5 text-lg">
-              {activeService.short}
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-3 mb-6">
-              {activeService.features.map((feature, i) => (
-                <span
-                  key={i}
-                  className="bg-green-500/10 backdrop-blur-sm px-5 py-2 rounded-md text-sm border border-green-500/30"
-                >
-                  {feature}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-2">
-              <Link
-                to={`/services/${activeService.id}`}
-                className="inline-block bg-green-600 px-10 py-4 rounded-lg hover:bg-green-700 transition font-semibold shadow-lg"
-              >
-                Explore Service
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* SCROLL SECTION */}
-        <section className="py-20 px-8 md:px-16">
-          <div className=" max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
-
-            {services.map((service, index) => (
+              {/* Detail Panel */}
               <div
-                key={index}
-                ref={(el) => (cardsRef.current[index] = el)}
-                className={`tilt-card backdrop-blur-xl bg-black/25 rounded-xl border border-white/20 shadow-2xl shadow-black/40  scroll-card ${
-                  index % 2 === 0 ? "from-left" : "from-right"
-                } border border-green-800 rounded-xl p-10 hover:scale-105 hover:border-green-500 hover:shadow-xl`}
+                className={`backdrop-blur-xl bg-black/25 rounded-xl border border-white/20 shadow-2xl shadow-black/40 w-full max-w-4xl px-10 pt-6 py-8 pb-8 transition-all duration-700 ease-in-out float-soft ${
+                  pageLoaded && fade
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-95"
+                }`}
               >
-                <h3 className="text-2xl text-green-400 mb-6">
-                  {service.title}
-                </h3>
+                <h2 className="text-3xl text-green-400 mb-4">
+                  {activeService.title}
+                </h2>
 
-                <p className="text-gray-400 mb-8 text-base">
-                  {service.details}
+                <p className="text-gray-300 mb-5 text-lg">
+                  {activeService.short}
                 </p>
 
-                <Link
-                  to={`/services/${service.id}`}
-                  className="inline-block border border-green-600 px-8 py-3 rounded-md hover:bg-green-700 transition"
-                >
-                  Learn More
-                </Link>
-              </div>
-            ))}
+                <div className="flex flex-wrap justify-center gap-3 mb-6">
+                  {activeService.features.map((feature, i) => (
+                    <span
+                      key={i}
+                      className="bg-green-500/10 backdrop-blur-sm px-5 py-2 rounded-md text-sm border border-green-500/30"
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
 
-          </div>
+                <div className="mt-2">
+                  <Link
+                    to={`/services/${activeService.id}`}
+                    className="inline-block bg-green-600 px-10 py-4 rounded-lg hover:bg-green-700 transition font-semibold shadow-lg"
+                  >
+                    Explore Service
+                  </Link>
+                </div>
+              </div>
+            </>
+          )}
         </section>
+
+        {/* SCROLL SECTION  */}
+        {!loading && !error && services.length > 0 && (
+          <section className="py-20 px-8 md:px-16">
+            <div className=" max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+
+              {services.map((service, index) => (
+                <div
+                  key={index}
+                  ref={(el) => (cardsRef.current[index] = el)}
+                  className={`tilt-card backdrop-blur-xl bg-black/25 rounded-xl border border-white/20 shadow-2xl shadow-black/40  scroll-card ${
+                    index % 2 === 0 ? "from-left" : "from-right"
+                  } border border-green-800 rounded-xl p-10 hover:scale-105 hover:border-green-500 hover:shadow-xl`}
+                >
+                  <h3 className="text-2xl text-green-400 mb-6">
+                    {service.title}
+                  </h3>
+
+                  <p className="text-gray-400 mb-8 text-base">
+                    {service.details}
+                  </p>
+
+                  <Link
+                    to={`/services/${service.id}`}
+                    className="inline-block border border-green-600 px-8 py-3 rounded-md hover:bg-green-700 transition"
+                  >
+                    Learn More
+                  </Link>
+                </div>
+              ))}
+
+            </div>
+          </section>
+        )}
 
       </div>
 
