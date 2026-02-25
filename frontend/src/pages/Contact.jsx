@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import bgImage from "../assets/hero.png";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -38,19 +38,19 @@ export default function Contact() {
 
         {/* Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/95"></div>
-        <div className="absolute inset-0 bg-red-600/10 mix-blend-overlay"></div>
-        <div className="absolute w-full h-1 bg-red-500/40 animate-scanLine"></div>
+        <div className="absolute inset-0 bg-green-600/10 mix-blend-overlay"></div>
+        <div className="absolute w-full h-1 bg-green-500/40 animate-scanLine"></div>
 
         {/* Content */}
         <div className="relative z-20 flex items-center justify-center h-full px-6 pt-28 pb-16">
 
           <div className="w-full max-w-xl 
                           bg-black/70 backdrop-blur-md 
-                          border border-red-900 
+                          border border-green-900 
                           rounded-lg p-6 
-                          shadow-xl shadow-red-900/40">
+                          shadow-xl shadow-green-900/40">
 
-            <h1 className="text-2xl font-bold text-red-600 mb-4 text-center">
+            <h1 className="text-2xl font-bold text-green-600 mb-4 text-center">
               Contact Us
             </h1>
 
@@ -69,7 +69,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm text-white"
+                             focus:outline-none focus:border-green-600 text-sm text-white"
                 />
               </div>
 
@@ -85,7 +85,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm text-white"
+                             focus:outline-none focus:border-green-600 text-sm text-white"
                 />
               </div>
 
@@ -102,7 +102,7 @@ export default function Contact() {
                   value={formData.phone}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm text-white"
+                             focus:outline-none focus:border-green-600 text-sm text-white"
                 />
               </div>
 
@@ -119,15 +119,15 @@ export default function Contact() {
                   value={formData.requirements}
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded bg-black border border-zinc-700 
-                             focus:outline-none focus:border-red-600 text-sm text-white"
+                             focus:outline-none focus:border-green-600 text-sm text-white"
                 />
               </div>
 
               {/* Button */}
               <button
                 type="submit"
-                className="w-full bg-red-600 py-2 rounded font-semibold 
-                           hover:bg-red-700 transition text-sm mt-2 "
+                className="w-full bg-green-600 py-2 rounded font-semibold 
+                           hover:bg-green-700 transition text-sm mt-2 "
               >
                 Submit Inquiry
               </button>

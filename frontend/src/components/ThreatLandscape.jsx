@@ -2,9 +2,14 @@ import { motion } from "framer-motion";
 
 export default function ThreatLandscape() {
   return (
-    <section className="relative py-32 bg-[#0a0a0a] overflow-hidden">
+    <section className="relative py-32 overflow-hidden">
 
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+  
+      <div className="absolute inset-0 bg-gradient-to-b from-[#000a00] via-[#000d00] to-[#000300]"></div>
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,0,0.04),transparent_75%)]"></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
 
         {/* LEFT TEXT */}
         <motion.div
@@ -41,7 +46,7 @@ export default function ThreatLandscape() {
           ].map((item, index) => (
             <div
               key={index}
-              className="bg-[#111] border border-red-900 rounded-lg p-6 hover:border-red-500 transition duration-300 text-gray-300"
+              className="bg-black/30 backdrop-blur-sm border border-green-900/60 rounded-lg p-6 hover:border-green-500 transition duration-300 text-gray-300"
             >
               {item}
             </div>
