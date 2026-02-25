@@ -3,7 +3,7 @@ const Service = require('../models/Service');
 // Get all services
 exports.getAllServices = async (req, res) => {
   try {
-    const services = await Service.find().sort({ createdAt: -1 });
+    const services = await Service.find({ isActive: true }).sort({ createdAt: -1 });
     res.status(200).json(services);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -27,7 +27,7 @@ exports.getServiceById = async (req, res) => {
 exports.getServicesByCategory = async (req, res) => {
   try {
     const { category } = req.params;
-    const services = await Service.find({ category }).sort({ createdAt: -1 });
+    const services = await Service.find({ category, isActive: true }).sort({ createdAt: -1 });
     res.status(200).json(services);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -37,13 +37,22 @@ exports.getServicesByCategory = async (req, res) => {
 // Create new service
 exports.createService = async (req, res) => {
   try {
-    const { name, description, price, category, image } = req.body;
+    const { title, name, shortDescription, detailedDescription, features, category, image, price } = req.body;
 
-    if (!name || !description || !price || !category || !image) {
-      return res.status(400).json({ message: 'All fields are required' });
+    if (!title || !name || !shortDescription || !detailedDescription || !features || !category || !image) {
+      return res.status(400).json({ message: 'All required fields must be provided' });
     }
 
-    const service = new Service({ name, description, price, category, image });
+    const service = new Service({ 
+      title, 
+      name, 
+      shortDescription, 
+      detailedDescription, 
+      features, 
+      category, 
+      image,
+      price 
+    });
     await service.save();
 
     res.status(201).json({ message: 'Service created successfully', service });

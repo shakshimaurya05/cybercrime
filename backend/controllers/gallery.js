@@ -1,5 +1,4 @@
 
-
 const Gallery = require('../models/Gallery');
 
 // Get all gallery images
