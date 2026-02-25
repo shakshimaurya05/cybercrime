@@ -126,7 +126,7 @@ export default function Contact() {
               {/* Button */}
               <button
                 type="submit"
-                className="w-full bg-green-600 py-2 rounded font-semibold 
+                className="w-full bg-green-600 py-2 rounded font-semibold
                            hover:bg-green-700 transition text-sm mt-2 "
               >
                 Submit Inquiry
