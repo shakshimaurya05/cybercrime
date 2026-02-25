@@ -1,21 +1,29 @@
+
 const path = require('path');
 const fs = require('fs');
+const Gallery = require('../models/Gallery');
 
 // Upload single image
-exports.uploadImage = async (req, res) => {
+const uploadImage = async (req, res) => {
   try {
-    // Check if file exists in request
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    // Build image URL
     const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
 
-    res.status(200).json({
-      message: 'Image uploaded successfully',
+    const galleryImage = new Gallery({
       imageUrl: imageUrl,
-      filename: req.file.filename
+      filename: req.file.filename,
+      title: req.body.title || 'Gallery Image'
+    });
+    await galleryImage.save();
+
+    res.status(200).json({
+      message: 'Image uploaded and added to gallery successfully',
+      imageUrl: imageUrl,
+      filename: req.file.filename,
+      galleryId: galleryImage._id
     });
 
   } catch (error) {
@@ -24,20 +32,17 @@ exports.uploadImage = async (req, res) => {
 };
 
 // Delete image
-exports.deleteImage = async (req, res) => {
+const deleteImage = async (req, res) => {
   try {
     const { filename } = req.params;
-
-    // Build file path
     const filePath = path.join(__dirname, '../uploads', filename);
 
-    // Check if file exists
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: 'File not found' });
     }
 
-    // Delete file from filesystem
     fs.unlinkSync(filePath);
+    await Gallery.findOneAndDelete({ filename: filename });
 
     res.status(200).json({ message: 'Image deleted successfully' });
 
@@ -45,3 +50,5 @@ exports.deleteImage = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+module.exports = { uploadImage, deleteImage };
