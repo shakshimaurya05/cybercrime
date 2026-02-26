@@ -5,7 +5,7 @@ const {
   getAllGalleryImages,
   addGalleryImage,
   deleteGalleryImage
-} = require('../controllers/Gallery');
+} = require('../controllers/gallery');
 const { verifyToken } = require('../middleware/auth');
 
 // Get all images - GET /api/gallery

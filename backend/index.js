@@ -19,7 +19,7 @@ const authRoutes = require('./routes/auth');
 const serviceCategoryRoutes = require('./routes/serviceCategory');
 const serviceCardRoutes = require('./routes/serviceCard');
 const uploadRoutes = require('./routes/upload');
-const galleryRoutes = require('./routes/Gallery');
+const galleryRoutes = require('./routes/gallery');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', serviceCategoryRoutes);
