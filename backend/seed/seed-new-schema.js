@@ -1,12 +1,10 @@
-
-
 const mongoose = require('mongoose');
 require('dotenv').config();
 
 const ServiceCategory = require('../models/ServiceCategory');
 const ServiceCard = require('../models/ServiceCard');
 
-// Categories Data
+// Categories Data (With RELEVANT images for each service type)
 const categories = [
   {
     name: "soc",
@@ -20,7 +18,8 @@ const categories = [
       "SIEM Integration",
       "Threat Intelligence"
     ],
-    image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769"
+    // SOC = Control Room, Security Monitors
+    image: "https://images.unsplash.com/photo-1551808525-51a94379889b"
   },
   {
     name: "vapt",
@@ -34,7 +33,8 @@ const categories = [
       "Remediation Guidance",
       "Compliance Testing"
     ],
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b"
+    // VAPT = Code, Hacking, Testing
+    image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb"
   },
   {
     name: "find-info",
@@ -48,11 +48,12 @@ const categories = [
       "Exposure Mitigation",
       "Breach Intelligence"
     ],
-    image: "https://images.unsplash.com/photo-1526378722484-bd91ca387e72"
+    // Dark Web = Dark, Mysterious, Data
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5"
   }
 ];
 
-// Service Cards Data (Products under each category)
+// Service Cards Data (With RELEVANT images for each product)
 const serviceCards = [
   // SOC Cards
   {
@@ -60,7 +61,8 @@ const serviceCards = [
     title: "SOC Lite Monitoring",
     description: "Real-time log monitoring with AI-powered alerting and compliance-ready reporting dashboards.",
     price: 999,
-    image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769",
+    // Monitoring Dashboard
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
     features: ["24/7 Monitoring", "Log Analysis", "Alert System"]
   },
   {
@@ -68,7 +70,8 @@ const serviceCards = [
     title: "SOC Enterprise Suite",
     description: "Full security operations automation with advanced threat intelligence integration and active response orchestration.",
     price: 2499,
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+    // Advanced Security Operations
+    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b",
     features: ["Threat Intelligence", "Auto Response", "SIEM Integration"]
   },
   
@@ -78,7 +81,8 @@ const serviceCards = [
     title: "Web Application VAPT",
     description: "In-depth web app penetration testing covering OWASP Top 10 and business logic vulnerabilities.",
     price: 1499,
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
+    // Web Code Testing
+    image: "https://images.unsplash.com/photo-1562813733-b31f71025d54",
     features: ["OWASP Testing", "Business Logic", "Detailed Report"]
   },
   {
@@ -86,7 +90,8 @@ const serviceCards = [
     title: "Cloud Security Audit",
     description: "Advanced AWS/Azure cloud misconfiguration assessment with risk prioritization and remediation roadmap.",
     price: 1999,
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+    // Cloud Infrastructure
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
     features: ["AWS/Azure", "Risk Assessment", "Remediation Plan"]
   },
   
@@ -96,7 +101,8 @@ const serviceCards = [
     title: "Dark Web Exposure Scan",
     description: "Automated scanning of breach databases and dark web marketplaces for exposed credentials.",
     price: 799,
-    image: "https://images.unsplash.com/photo-1526378722484-bd91ca387e72",
+    // Dark Web / Matrix Style
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
     features: ["Breach Database", "Dark Web Scan", "Credential Check"]
   },
   {
@@ -104,7 +110,8 @@ const serviceCards = [
     title: "Executive Risk Shield",
     description: "Continuous monitoring of executive digital exposure with personalized threat alerts.",
     price: 1299,
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4",
+    // Protection Shield / Executive
+    image: "https://images.unsplash.com/photo-1555421689-491a97ff2040",
     features: ["Executive Monitoring", "Threat Alerts", "Risk Reports"]
   }
 ];
