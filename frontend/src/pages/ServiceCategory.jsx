@@ -21,49 +21,29 @@ export default function ServiceCategory() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        console.log('=== Fetching Services ===');
-        console.log('Category ID:', id);
-        
-        // Direct fetch try karo (axios ke bina)
-        const directUrl = `http://localhost:5000/api/services/category/${id}`;
-        console.log('Direct URL:', directUrl);
-        
+        console.log('=== Fetching Service Cards ===');
+        console.log('Category:', id);
         setLoading(true);
         
-        // Pehle axios se try
-        const response = await api.get(`/api/services/category/${id}`);
-        console.log('Axios Response status:', response.status);
-        console.log('Axios Response data:', response.data);
-        console.log('Services count:', response.data.length);
+        // Fetch cards for this category
+        const response = await api.get(`/api/cards/category/${id}`);
+        console.log('Cards fetched:', response.data);
+        console.log('Cards count:', response.data.length);
         
         setServices(response.data);
         setError(null);
       } catch (err) {
-        console.error('=== Error with Axios ===');
+        console.error('=== Error Fetching Service Cards ===');
         console.error('Error:', err);
         console.error('Response:', err.response?.data);
-        
-        // Fallback - direct fetch try karo
-        try {
-          console.log('Trying direct fetch...');
-          const directUrl = `http://localhost:5000/api/services/category/${id}`;
-          const fallbackResponse = await fetch(directUrl);
-          const data = await fallbackResponse.json();
-          console.log('Direct fetch success:', data);
-          setServices(data);
-          setError(null);
-        } catch (fetchErr) {
-          console.error('=== Direct fetch also failed ===');
-          console.error('Fetch Error:', fetchErr);
-          setError('Failed to load services. Please try again later.');
-        }
+        setError('Failed to load services. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
     if (id) {
-      console.log('=== useEffect triggered with id:', id, '===');
+      console.log('=== useEffect triggered with category:', id, '===');
       fetchServices();
     }
   }, [id]);

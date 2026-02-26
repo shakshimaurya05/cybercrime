@@ -15,47 +15,45 @@ export default function Services() {
   const [pageLoaded, setPageLoaded] = useState(false);
   const cardsRef = useRef([]);
 
-  // Fetch services from backend on component mount
+  // Fetch categories from backend on component mount
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchCategories = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/api/services');
-        console.log('Services fetched:', response.data);
+        const response = await api.get('/api/categories');
+        console.log('Categories fetched:', response.data);
 
-        // Map backend services to match the UI structure
-        const mappedServices = response.data.map(service => ({
-          id: service._id,
+        // Map backend categories to match the UI structure
+        const mappedServices = response.data.map(category => ({
+          id: category._id,
           // Short name for selector (use name field)
-          name: service.name,
-          // Full title for detail panel (use title if exists, otherwise use name)
-          title: service.title || service.name,
-          // Short description (use shortDescription from backend)
-          short: service.shortDescription || service.short || (service.detailedDescription ? service.detailedDescription.substring(0, 100) + '...' : ''),
-          // Full details (use detailedDescription from backend)
-          details: service.detailedDescription || service.details || service.description || '',
+          name: category.name,
+          // Full title for detail panel
+          title: category.title,
+          // Short description
+          short: category.shortDescription,
+          // Full details
+          details: category.detailedDescription,
           // Features array from backend
-          features: service.features || [],
+          features: category.features,
           // Image
-          image: service.image,
-          // Price
-          price: service.price,
-          // Category
-          category: service.category
+          image: category.image,
+          // Category (for URL)
+          category: category.name
         }));
 
-        console.log('Mapped services:', mappedServices);
+        console.log('Mapped categories:', mappedServices);
         setServices(mappedServices);
         setError(null);
       } catch (err) {
-        console.error('Error fetching services:', err);
+        console.error('Error fetching categories:', err);
         setError('Failed to load services. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServices();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
