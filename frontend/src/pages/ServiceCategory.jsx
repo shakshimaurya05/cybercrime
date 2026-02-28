@@ -10,6 +10,7 @@ export default function ServiceCategory() {
   const cardsRef = useRef([]);
   const [pageLoaded, setPageLoaded] = useState(false);
   const [services, setServices] = useState([]);
+  const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,23 +18,29 @@ export default function ServiceCategory() {
     setTimeout(() => setPageLoaded(true), 200);
   }, []);
 
-  // Fetch services by category from backend
+  // Fetch category details and services by category from backend
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        console.log('=== Fetching Service Cards ===');
+        console.log('=== Fetching Category and Service Cards ===');
         console.log('Category:', id);
         setLoading(true);
-        
-        // Fetch cards for this category
-        const response = await api.get(`/api/cards/category/${id}`);
-        console.log('Cards fetched:', response.data);
-        console.log('Cards count:', response.data.length);
-        
-        setServices(response.data);
+
+        // Fetch category details and cards in parallel
+        const [categoryRes, cardsRes] = await Promise.all([
+          api.get(`/api/categories/name/${id}`),
+          api.get(`/api/cards/category/${id}`)
+        ]);
+
+        console.log('Category fetched:', categoryRes.data);
+        console.log('Cards fetched:', cardsRes.data);
+        console.log('Cards count:', cardsRes.data.length);
+
+        setCategory(categoryRes.data);
+        setServices(cardsRes.data);
         setError(null);
       } catch (err) {
-        console.error('=== Error Fetching Service Cards ===');
+        console.error('=== Error Fetching Data ===');
         console.error('Error:', err);
         console.error('Response:', err.response?.data);
         setError('Failed to load services. Please try again later.');
@@ -44,7 +51,7 @@ export default function ServiceCategory() {
 
     if (id) {
       console.log('=== useEffect triggered with category:', id, '===');
-      fetchServices();
+      fetchData();
     }
   }, [id]);
 
@@ -92,7 +99,7 @@ export default function ServiceCategory() {
     );
   }
 
-  if (services.length === 0) {
+  if (!loading && services.length === 0 && !category) {
     return (
       <>
         <Navbar />
@@ -102,9 +109,6 @@ export default function ServiceCategory() {
       </>
     );
   }
-
-  const categoryTitle = services[0]?.title || id?.toUpperCase();
-  const categoryDescription = services[0]?.detailedDescription || '';
 
   return (
     <div
@@ -121,7 +125,7 @@ export default function ServiceCategory() {
         <Navbar />
 
         <main className="pt-32 px-6 pb-20 text-white">
-          {/* Heading */}
+          {/* Heading - Category Info */}
           <div className="text-center mb-16">
             <h1
               className={`text-4xl md:text-5xl font-bold text-green-500 mb-6 transition-all duration-1000 ${
@@ -130,7 +134,7 @@ export default function ServiceCategory() {
                   : "opacity-0 -translate-y-10"
               }`}
             >
-              {categoryTitle}
+              {category?.title || id?.toUpperCase()}
             </h1>
 
             <p
@@ -140,7 +144,7 @@ export default function ServiceCategory() {
                   : "opacity-0 translate-y-10"
               }`}
             >
-              {categoryDescription}
+              {category?.detailedDescription || ''}
             </p>
           </div>
 
@@ -173,20 +177,6 @@ export default function ServiceCategory() {
                     <p className="text-gray-300 text-sm leading-relaxed mb-4">
                       {service.shortDescription || service.description}
                     </p>
-
-                    {/* Features */}
-                    {service.features && service.features.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {service.features.slice(0, 3).map((feature, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-green-500/10 text-green-400 px-3 py-1 rounded border border-green-500/30"
-                          >
-                            {feature}
-                          </span>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -195,7 +185,7 @@ export default function ServiceCategory() {
                     </span>
 
                     <Link
-                      to={`/services/${service._id}`}
+                      to="/contact"
                       className="bg-green-600 px-4 py-2 rounded-md hover:bg-green-700 transition text-sm font-semibold"
                     >
                       View Details
