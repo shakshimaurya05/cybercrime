@@ -3,19 +3,18 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
 
   return (
-    <nav className="fixed w-full bg-black border-b border-green-900 z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center text-white">
+    <nav className="fixed w-full bg-black border-b border-green-900 z-[9999]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center text-white relative">
 
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-green-500">
+        <Link to="/" className="text-xl font-bold text-green-500 flex-shrink-0">
           Cyber Initiative
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-8 items-center">
+        <div className="hidden md:flex space-x-8 items-center flex-shrink-0">
 
           <Link to="/" className="hover:text-green-500 transition">
             Home
@@ -24,7 +23,7 @@ export default function Navbar() {
            <Link to="/services" className="hover:text-green-400 transition">
             Services
           </Link>
-          
+
 
           <Link to="/gallery" className="hover:text-green-500 transition">
             Gallery
@@ -41,8 +40,9 @@ export default function Navbar() {
 
         {/* Mobile Toggle Button */}
         <button
-          className="md:hidden text-2xl"
+          className="md:hidden text-2xl text-white hover:text-green-500 transition z-50 block flex-shrink-0 ml-auto"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
         >
           ☰
         </button>
@@ -56,29 +56,9 @@ export default function Navbar() {
             Home
           </Link>
 
-          {/* Mobile Services Dropdown */}
-          <div>
-            <button
-              onClick={() => setServicesOpen(!servicesOpen)}
-              className="w-full text-left hover:text-green-500"
-            >
-              Services
-            </button>
-
-            {servicesOpen && (
-              <div className="pl-4 mt-2 space-y-2">
-                <Link to="/services/vapt" className="block hover:text-green-500">
-                  VAPT
-                </Link>
-                <Link to="/services/soc" className="block hover:text-green-500">
-                  SOC Monitoring
-                </Link>
-                <Link to="/services/find-info" className="block hover:text-green-500">
-                  Find Your Information
-                </Link>
-              </div>
-            )}
-          </div>
+          <Link to="/services" className="block hover:text-green-500">
+            Services
+          </Link>
 
           <Link to="/gallery" className="block hover:text-green-500">
             Gallery
