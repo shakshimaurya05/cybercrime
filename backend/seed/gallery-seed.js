@@ -6,8 +6,8 @@ const Gallery = require("../models/Gallery");
 const galleryImages = [
   {
     imageUrl:
-      "https://images.unsplash.com/photo-1551808525-51a94379889b?w=800&q=80",
-    filename: "soc-control-room",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+    filename: "soc-monitoring-new",
     title: "SOC 24/7 Monitoring Center",
   },
   {

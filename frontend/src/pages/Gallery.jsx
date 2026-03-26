@@ -9,6 +9,18 @@ export default function Gallery() {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const removeBrokenImage = (brokenUrl) => {
+    setImages((prevImages) => {
+      const filteredImages = prevImages.filter((img) => img.imageUrl !== brokenUrl);
+
+      if (selectedImage === brokenUrl) {
+        setSelectedImage(filteredImages[0]?.imageUrl || null);
+      }
+
+      return filteredImages;
+    });
+  };
+
   // Fetch gallery images from backend
   useEffect(() => {
     const fetchGallery = async () => {
@@ -90,6 +102,7 @@ export default function Gallery() {
                   src={selectedImage}
                   alt="Selected"
                   className="w-full h-full object-cover hover:scale-105 transition duration-500"
+                  onError={() => removeBrokenImage(selectedImage)}
                 />
               </div>
 
@@ -106,6 +119,7 @@ export default function Gallery() {
                       src={img.imageUrl}
                       alt={img.title || `Gallery image ${index + 1}`}
                       className="w-full h-full object-cover"
+                      onError={() => removeBrokenImage(img.imageUrl)}
                     />
                   </div>
                 ))}
