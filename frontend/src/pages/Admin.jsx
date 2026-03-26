@@ -30,15 +30,23 @@ export default function Admin() {
     image: null,
   });
 
+  const [galleryForm, setGalleryForm] = useState({
+    title: "",
+    image: null,
+  });
+
   // Store added items (from backend)
-  const [addedServices, setAddedServices] = useState([]);
+  const [galleryImages, setGalleryImages] = useState([]);
   const [addedCards, setAddedCards] = useState([]);
   const [showServiceSuccess, setShowServiceSuccess] = useState(false);
   const [showCardSuccess, setShowCardSuccess] = useState(false);
+  const [showGallerySuccess, setShowGallerySuccess] = useState(false);
   const [showServiceError, setShowServiceError] = useState(false);
   const [showCardError, setShowCardError] = useState(false);
+  const [showGalleryError, setShowGalleryError] = useState(false);
   const [serviceErrorMessage, setServiceErrorMessage] = useState("");
   const [cardErrorMessage, setCardErrorMessage] = useState("");
+  const [galleryErrorMessage, setGalleryErrorMessage] = useState("");
 
   // Fetch existing services and gallery images on mount
   useEffect(() => {
@@ -49,7 +57,7 @@ export default function Admin() {
           api.get('/api/gallery')
         ]);
         setAddedCards(servicesRes.data || []);
-        setAddedServices(galleryRes.data || []);
+        setGalleryImages(galleryRes.data || []);
       } catch (err) {
         console.error('Error fetching data:', err);
       }
@@ -78,6 +86,14 @@ export default function Admin() {
     const { name, value, files } = e.target;
     setCardForm({
       ...cardForm,
+      [name]: files ? files[0] : value,
+    });
+  };
+
+  const handleGalleryChange = (e) => {
+    const { name, value, files } = e.target;
+    setGalleryForm({
+      ...galleryForm,
       [name]: files ? files[0] : value,
     });
   };
@@ -179,6 +195,44 @@ export default function Admin() {
     }
   };
 
+  const handleGallerySubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const imageFormData = new FormData();
+      imageFormData.append('image', galleryForm.image);
+      imageFormData.append('title', galleryForm.title);
+
+      const uploadResponse = await api.post('/api/upload/image', imageFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      await api.post('/api/gallery', {
+        imageUrl: uploadResponse.data.imageUrl,
+        filename: uploadResponse.data.filename,
+        title: galleryForm.title,
+      });
+
+      setShowGallerySuccess(true);
+      setTimeout(() => setShowGallerySuccess(false), 3000);
+
+      const galleryRes = await api.get('/api/gallery');
+      setGalleryImages(galleryRes.data || []);
+
+      setGalleryForm({
+        title: "",
+        image: null,
+      });
+    } catch (err) {
+      console.error('Error adding gallery image:', err);
+      setGalleryErrorMessage(err.response?.data?.message || 'Failed to add gallery image');
+      setShowGalleryError(true);
+      setTimeout(() => setShowGalleryError(false), 3000);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -218,7 +272,7 @@ export default function Admin() {
                 Admin Dashboard
               </h1>
               <p className="text-gray-400 text-lg">
-                Manage Services and Service Cards
+                Manage services, cards, and gallery images
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -258,6 +312,16 @@ export default function Admin() {
             }`}
           >
             Add Service Inside Category 
+          </button>
+          <button
+            onClick={() => setActiveTab("add-gallery")}
+            className={`px-8 py-3 rounded-lg font-semibold transition-all duration-300 ${
+              activeTab === "add-gallery"
+                ? "bg-green-600 text-white shadow-lg shadow-green-500/30"
+                : "bg-white/10 text-gray-300 hover:bg-white/20"
+            }`}
+          >
+            Add Gallery Image
           </button>
         </div>
 
@@ -379,25 +443,6 @@ export default function Admin() {
                 </button>
               </form>
 
-              {/* Added Services List */}
-              {addedServices.length > 0 && (
-                <div className="mt-8 pt-8 border-t border-white/10">
-                  <h3 className="text-xl font-semibold text-green-400 mb-4">
-                    Added Services (Session)
-                  </h3>
-                  <div className="space-y-3">
-                    {addedServices.map((service, index) => (
-                      <div
-                        key={index}
-                        className="bg-white/5 border border-white/10 rounded-lg p-4"
-                      >
-                        <p className="text-green-400 font-semibold">{service.name}</p>
-                        <p className="text-gray-400 text-sm">{service.title}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -566,6 +611,109 @@ export default function Admin() {
                               Image: {card.imageName}
                             </p>
                           )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "add-gallery" && (
+            <div
+              className={`glass-card backdrop-blur-xl bg-black/30 rounded-xl border border-white/20 shadow-2xl p-8 md:p-12 transition-all duration-700 ${
+                pageLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
+            >
+              <h2 className="text-3xl font-bold text-green-400 mb-2">
+                Add Gallery Image
+              </h2>
+              <p className="text-gray-400 mb-8">
+                Upload event photos and other gallery-only images here
+              </p>
+
+              {showGallerySuccess && (
+                <div className="mb-6 p-4 bg-green-600/20 border border-green-500 rounded-lg text-green-400">
+                  âœ“ Gallery image added successfully!
+                </div>
+              )}
+
+              {showGalleryError && (
+                <div className="mb-6 p-4 bg-red-600/20 border border-red-500 rounded-lg text-red-400">
+                  âœ• {galleryErrorMessage}
+                </div>
+              )}
+
+              <form onSubmit={handleGallerySubmit} className="space-y-6">
+                <div>
+                  <label className="block text-gray-300 font-semibold mb-2">
+                    Image Title *
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={galleryForm.title}
+                    onChange={handleGalleryChange}
+                    placeholder="e.g., Cyber Awareness Workshop 2026"
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-green-500 text-white placeholder-gray-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 font-semibold mb-2">
+                    Upload Gallery Image *
+                  </label>
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleGalleryChange}
+                    required
+                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-green-500 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-700"
+                  />
+                  {galleryForm.image instanceof File && (
+                    <div className="mt-3">
+                      <p className="text-gray-400 text-sm mb-2">
+                        Selected: {galleryForm.image.name}
+                      </p>
+                      <img
+                        src={URL.createObjectURL(galleryForm.image)}
+                        alt="Gallery Preview"
+                        className="w-32 h-32 object-cover rounded-lg border border-white/20"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg transition-all duration-300 shadow-lg shadow-green-500/30"
+                >
+                  Add Gallery Image
+                </button>
+              </form>
+
+              {galleryImages.length > 0 && (
+                <div className="mt-8 pt-8 border-t border-white/10">
+                  <h3 className="text-xl font-semibold text-green-400 mb-4">
+                    Gallery Images
+                  </h3>
+                  <div className="space-y-3">
+                    {galleryImages.map((image, index) => (
+                      <div
+                        key={index}
+                        className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center gap-4"
+                      >
+                        <img
+                          src={image.imageUrl}
+                          alt={image.title}
+                          className="w-16 h-16 object-cover rounded-lg"
+                        />
+                        <div>
+                          <p className="text-green-400 font-semibold">{image.title || "Gallery Image"}</p>
+                          <p className="text-gray-400 text-sm">{image.filename}</p>
                         </div>
                       </div>
                     ))}
